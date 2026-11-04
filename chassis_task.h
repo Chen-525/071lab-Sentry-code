@@ -21,6 +21,8 @@
 #define CHASSIS_SPEED_MAX		4.0f
 #define CHASSIS_TURNING_RATE_MAX		2.0f
 
+#define CHASSIS_NAVIGATION_SPEED	2.0f
+
 #define CHASSIS_SPIN_RATE				4.0f					//rad/s
 
 typedef enum

@@ -142,6 +142,13 @@ void chassis_set_mode_spin(chassis_move_t *chassis_set_mode_spin_point)
 	chassis_set_mode_spin_point->wz = CHASSIS_SPIN_RATE;
 }
 
+void chassis_set_mode_navigation(chassis_move_t *chassis_set_mode_navigation_point)
+{
+	chassis_set_mode_navigation_point->vx = chassis_set_mode_navigation_point->chassis_navigation_data->vx * CHASSIS_NAVIGATION_SPEED;
+	chassis_set_mode_navigation_point->vy = -chassis_set_mode_navigation_point->chassis_navigation_data->vy * CHASSIS_NAVIGATION_SPEED;
+	chassis_set_mode_navigation_point->wz = chassis_set_mode_navigation_point->chassis_navigation_data->wz * CHASSIS_TURNING_RATE_MAX;
+}
+
 static void chassis_set_ctrl(chassis_move_t *chassis_set_ctrl)
 {
 	switch(chassis_set_ctrl->chassis_mode)
@@ -158,6 +165,9 @@ static void chassis_set_ctrl(chassis_move_t *chassis_set_ctrl)
 			break;
 		case CHASSIS_SPIN:
 			chassis_set_mode_spin(&chassis_move);
+			break;
+		case CHASSIS_NAVIGATION:
+			chassis_move_navigation(&chassis_move);
 			break;
 		default:
 			break;

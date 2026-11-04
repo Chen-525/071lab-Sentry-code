@@ -181,6 +181,10 @@ static void gimbal_set_mode(gimbal_para_t *gimbal_set_mode_point)
 	{
 		gimbal_set_mode_point->gimbal_mode = GIMBAL_SPIN;
 	}
+	else if(gimbal_set_mode_point->gimbal_remote_point->rc.s[0] == 1 && gimbal_set_mode_point->gimbal_remote_point->rc.s[1] == 1)
+	{
+		gimbal_set_mode_point->gimbal_mode = GIMBAL_NAVIGATION;
+	}
 	else
 	{
 		gimbal_set_mode_point->gimbal_mode = GIMBAL_NO_MOVE;
@@ -235,6 +239,13 @@ void gimbal_follow_yaw_control_loop(gimbal_para_t *gimbal_follow_yaw_control_loo
 
 }
 
+void gimbal_navigation_control_loop(gimbal_para_t *gimbal_navigation_control_loop_point)
+{
+	gimbal_mode_change_reset(gimbal_navigation_control_loop_point);
+	gimbal_navigation_control_loop_point->gimbal_yaw_motor.imu_angle_set += YAW_DIR * (fp32)gimbal_navigation_control_loop_point->gimbal_remote_point->rc.ch[0] / 660.0f * YAW_SENSITIVITY;
+	gimbal_navigation_control_loop_point->gimbal_pitch_motor.angle_set += PITCH_DIR * (fp32)gimbal_navigation_control_loop_point->gimbal_remote_point->rc.ch[1] / 660.0f * PITCH_SENSITIVITY;
+	gimbal_navigation_control_loop_point->gimbal_pitch_motor.angle_set = Limit(gimbal_navigation_control_loop_point->gimbal_pitch_motor.angle_set, GIMBAL_PITCH_MAX_ANGLE, GIMBAL_PITCH_MIN_ANGLE);
+}
 
 static void gimbal_set_control(gimbal_para_t *gimbal_set_control_point)
 {
@@ -251,6 +262,9 @@ static void gimbal_set_control(gimbal_para_t *gimbal_set_control_point)
 			break;
 		case GIMBAL_SPIN:
 			gimbal_follow_yaw_control_loop(&gimbal_para);
+			break;
+		case GIMBAL_NAVIGATION:
+			gimbal_navigation_control_loop(&gimbal_para);
 			break;
 		default:
 			break;

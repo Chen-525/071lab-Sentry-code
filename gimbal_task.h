@@ -39,6 +39,7 @@ typedef enum
 	GIMBAL_NORMAL_MOVE,
 	GIMBAL_FOLLOW_YAW,
 	GIMBAL_SPIN,
+	GIMBAL_NAVIGATION,
 }gimbal_mode_e;
 
 typedef struct
